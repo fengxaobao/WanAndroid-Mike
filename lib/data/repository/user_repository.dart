@@ -46,4 +46,5 @@ class UserRepository {
     SpUtil.putObject(BaseConstant.keyUserModel, model);
     return model;
   }
+
 }
