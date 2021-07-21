@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:lpinyin/lpinyin.dart';
 import 'package:wan_android/common/common.dart';
 import 'package:wan_android/res/strings.dart';
+import 'package:wan_android/utils/util_index.dart';
+import 'package:base_library/src/common/common.dart';
 
 class Utils {
   static String getImgPath(String name, {String format: 'png'}) {
-    return 'assets/images/$name.$format';
+    return 'data/images/$name.$format';
   }
 
   static String getPinyin(String str) {
@@ -72,5 +74,8 @@ class Utils {
     } else {
       return LoadStatus.success;
     }
+  }
+  static bool isLogin() {
+    return ObjectUtil.isNotEmpty(SpUtil.getString(BaseConstant.keyAppToken));
   }
 }

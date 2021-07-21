@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
-
-import 'home/draw_home.dart';
-
+import 'package:wan_android/res/colors.dart';
+import 'package:wan_android/res/strings.dart';
+import 'package:wan_android/ui/home/HomeDrawerPage.dart';
+import 'package:wan_android/utils/sp_helper.dart';
+import 'package:wan_android/utils/util_index.dart';
+import 'package:flutter/material.dart';
+import 'common/common.dart';
+import 'models/models.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:base_library/base_library.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
 void main() {
   runApp(MyApp());
 }
@@ -15,13 +24,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'WanAndroid'),
+      home: MyHomePage(title: 'Mike WanAndroid'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key,  this.title}) : super(key: key);
+  MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
 
   @override
@@ -29,40 +38,100 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  Locale _locale;
+  Color _themeColor = ColorRes.app_main;
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setLocalizedValues(localizedValues);
+    _loadLocale();
+    _init();
+  }
+  void _init() {
+//    DioUtil.openDebug();
+    Options options = DioUtil.getDefOptions();
+    options.baseUrl = Constant.server_address;
+    String cookie = SpUtil.getString(BaseConstant.keyAppToken);
+    if (ObjectUtil.isNotEmpty(cookie)) {
+      Map<String, dynamic> _headers = new Map();
+      _headers["Cookie"] = cookie;
+      options.headers = _headers;
+    }
+    var config =  HttpConfig(options: options);
+    DioUtil().setConfig(config);
+  }
+
+
+  void _loadLocale() {
     setState(() {
-      _counter++;
+      LanguageModel model =
+          SpUtil.getObj(Constant.keyLanguage, (v) => LanguageModel.fromJson(v));
+      if (model != null) {
+        _locale = new Locale(model.languageCode, model.countryCode);
+      } else {
+        _locale = null;
+      }
+
+      String _colorKey = SpHelper.getThemeColor();
+      if (themeColorMap[_colorKey] != null)
+        _themeColor = themeColorMap[_colorKey];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      drawer: Drawer(child: HomeDrawPage()),
-      body: Center(
-          child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    return MaterialApp(
+        locale: _locale,
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          CustomLocalizations.delegate
+        ],
+        supportedLocales: CustomLocalizations.supportedLocales,
+
+        home: DefaultTabController(
+          initialIndex: 1,
+          length: 4,
+          child: Scaffold(
+            drawer: HomeDrawerPage(),
+            appBar: AppBar(
+              title: Text(widget.title),
+              bottom: const TabBar(
+                tabs: <Widget>[
+                  Tab(
+                    text: "主页",
+                  ),
+                  Tab(
+                    text: "项目",
+                  ),
+                  Tab(
+                    text: "动态",
+                  ),
+                  Tab(
+                    text: "体系",
+                  ),
+                ],
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            body: const TabBarView(
+              children: <Widget>[
+                Center(
+                  child: Text("It's cloudy here"),
+                ),
+                Center(
+                  child: Text("It's rainy here"),
+                ),
+                Center(
+                  child: Text("It's sunny here"),
+                ),
+                Center(
+                  child: Text("It's sunny here1"),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
+          ),
+        ));
   }
 }

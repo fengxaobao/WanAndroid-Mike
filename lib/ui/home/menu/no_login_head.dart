@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wan_android/home/login/UserLoginPage.dart';
-import 'package:wan_android/utils/navigator_util.dart';
+import 'package:wan_android/ui/home/login/UserLoginPage.dart';
 
 class HomeMenuNoLoginHead extends StatefulWidget {
   @override
@@ -26,18 +25,19 @@ class _HomeMenuNoLoginPage extends State<HomeMenuNoLoginHead> {
               ///头像
               Padding(
                 padding: EdgeInsets.only(bottom: 8.0),
-                child: CircleAvatar(
+                child:SizedBox.fromSize(child:  CircleAvatar(
                   backgroundColor: Colors.black26,
                   radius: 38.0,
-                  child: Image.asset("assets/images/icon_wan_android.png"),
-                ),
+
+                  child: Image.asset("data/images/icon_wan_android.png",width: 50,height: 50),
+                ),size:Size(68.0,68.0)),
               ),
               FlatButton(
                 color: Colors.black26,
                 highlightColor: Colors.blue[700],
                 colorBrightness: Brightness.dark,
                 splashColor: Colors.grey,
-                child: Text("去登陆1" ,style: TextStyle(color: Colors.white),),
+                child: Text("去登录" ,style: TextStyle(color: Colors.white),),
                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(builder: (context){
