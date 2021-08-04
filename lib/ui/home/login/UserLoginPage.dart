@@ -14,8 +14,19 @@ class UserLoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Ids.titleAbout),
-        leading: Icon(Icons.arrow_back),
+        title: Text("登录"),
+        leading: Builder(
+          builder: (BuildContext context){
+      return IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+      );
+
+          },
+        ),
         centerTitle: true,
       ),
       body: new Stack(

@@ -98,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
             drawer: HomeDrawerPage(),
             appBar: AppBar(
               title: Text(widget.title),
+              centerTitle: true,
               bottom: const TabBar(
                 tabs: <Widget>[
                   Tab(
